@@ -56,8 +56,8 @@ class Patient(db.Model):
             raise ValueError('sex is required')
         birth_date = parser.parse(data.get('birth_date'), yearfirst=True, dayfirst=False)
 
-        return Patient(data.get('email'), data.get('first_name'), data.get('last_name'), birth_date.date(),
-                       data.get('sex'))
+        return cls(data.get('email'), data.get('first_name'), data.get('last_name'), birth_date.date(),
+                   data.get('sex'))
 
     def save_to_db(self, request_id):
         try:
@@ -69,11 +69,13 @@ class Patient(db.Model):
 
     @classmethod
     def get_patients(cls, per_page):
-        pagination = Patient.query.paginate(per_page=per_page, error_out=False)
+        pagination = cls.query.paginate(per_page=per_page, error_out=False)
         if pagination.has_next:
             return pagination.items, True
         elif pagination.items:
             return pagination.items, False
+        elif pagination.page == 1:
+            return [], False
         else:
             raise GeneralException(
                 Error(status=404, title="Not Found", detail="Page not found", code=PATIENT_RECORD_PAGE_NOT_FOUND))

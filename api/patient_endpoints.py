@@ -10,13 +10,14 @@ from response import *
 
 
 class PatientsEndpoint(Resource):
-    RESULT_PER_PAGE = 3
+    RESULT_PER_PAGE = 10
 
     def get(self):
         request_id = uuid.uuid4()
         current_app.logger.debug("request received:{}".format(request_id))
+        next_url = PatientsEndpoint.generate_next_url(request_id)
         results, has_next = model.Patient.get_patients(PatientsEndpoint.RESULT_PER_PAGE)
-        next_url = PatientsEndpoint.generate_next_url(request_id) if has_next else ""
+        next_url = next_url if has_next else ""
         return make_response(jsonify(
             {'data': [patient.to_json for patient in results], 'links': {'self': request.url, 'next': next_url}}), 200)
 

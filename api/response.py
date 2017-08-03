@@ -28,3 +28,7 @@ class Error(object):
             'code': self.code,
             'source': self.source
         }
+
+    @classmethod
+    def create_not_found_exception(cls):
+        return cls(status=404, title='Not Found', detail='Page not found')
