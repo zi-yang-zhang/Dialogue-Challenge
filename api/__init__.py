@@ -1,8 +1,8 @@
 from flask_restful import Api
 
-from patient import Patient, Patients
+from patient_endpoints import PatientEndpoint, PatientsEndpoint
 
 router = Api()
 
-router.add_resource(Patient, '/patients', '/patients/<string:patient_id>')
-router.add_resource(Patients, '/patients')
+router.add_resource(PatientEndpoint, '/patients/<string:patient_id>')
+router.add_resource(PatientsEndpoint, '/patients', '/patients/<string:page>')

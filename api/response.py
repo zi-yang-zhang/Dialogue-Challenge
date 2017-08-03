@@ -1,9 +1,11 @@
-import uuid
+PATIENT_RECORD_NOT_FOUND = 'PRE1'
+PATIENT_RECORD_EMAIL_DUPLICATE = 'PRE2'
+PATIENT_RECORD_PAGE_NOT_FOUND = 'PRE3'
 
 
 class Error(object):
-    def __init__(self, status='', title='', detail='', code='', source=None):
-        self.id = uuid.uuid4()
+    def __init__(self, req_id='', status=None, title='', detail='', code='', source=None):
+        self.id = req_id
         self.status = status
         self.title = title
         self.detail = detail
@@ -11,6 +13,18 @@ class Error(object):
         self.source = source
 
     def __str__(self):
-        return "Error:{id:%s, status:%s, title:%s, detail:%s, code:%s, source:%s".format(self.id, self.status,
-                                                                                         self.title, self.detail,
-                                                                                         self.code, self.source)
+        return "Error:{id:{!r}, status:{!r}, title:{!r}, detail:{!r}, code:{!r}, source:{!r}".format(self.id,
+                                                                                                     self.status,
+                                                                                                     self.title, self.detail,
+                                                                                                     self.code, self.source)
+
+    @property
+    def to_json(self):
+        return {
+            'id': self.id,
+            'status': str(self.status),
+            'title': self.title,
+            'detail': self.detail,
+            'code': self.code,
+            'source': self.source
+        }
